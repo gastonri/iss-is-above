@@ -1,0 +1,148 @@
+:root {
+    --bg: #050816;
+    --surface: #0d1330;
+    --surface-2: #131b3f;
+    --border: rgba(148, 163, 255, 0.16);
+    --text: #e8ecff;
+    --muted: #8f9acb;
+    --accent: #5eead4;
+    --danger: #fb7185;
+    --radius: 18px;
+    color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    color: var(--text);
+    background:
+        radial-gradient(1200px 600px at 80% -10%, rgba(94, 234, 212, 0.12), transparent 60%),
+        radial-gradient(900px 500px at -10% 10%, rgba(129, 140, 248, 0.14), transparent 60%),
+        var(--bg);
+    background-attachment: fixed;
+}
+
+a { color: var(--accent); text-underline-offset: 3px; }
+
+.app {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 16px 24px;
+}
+
+.header { margin-bottom: 24px; }
+
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 12px;
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--muted);
+}
+.pulse--live { background: var(--accent); animation: pulse 2s infinite; }
+.pulse--error { background: var(--danger); }
+
+h1 {
+    margin: 0;
+    font-size: clamp(1.8rem, 5vw, 3.2rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+.accent {
+    background: linear-gradient(90deg, var(--accent), #a5b4fc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+.subtitle { margin: 8px 0 0; color: var(--muted); font-size: 1.1rem; }
+
+.layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 20px;
+}
+
+.map-card, .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.6);
+}
+.map-card { min-height: 520px; }
+.map { height: 100%; min-height: 520px; background: var(--bg); }
+
+.panel { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+
+.stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 0;
+}
+.stat {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 12px;
+}
+.stat dt { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+.stat dd { margin: 4px 0 0; font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+
+.visibility { margin: 0; font-size: 0.85rem; color: var(--muted); }
+
+.photo { margin: 0; border-radius: 14px; overflow: hidden; background: var(--surface-2); border: 1px solid var(--border); }
+.photo img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.photo figcaption { padding: 14px; font-size: 0.9rem; }
+.photo figcaption p {
+    margin: 6px 0 10px;
+    color: var(--muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.photo__empty { margin: 0; padding: 24px 14px; color: var(--muted); text-align: center; }
+.photo__skeleton {
+    aspect-ratio: 4 / 3;
+    background: linear-gradient(100deg, var(--surface-2) 30%, #1c2655 50%, var(--surface-2) 70%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite linear;
+}
+
+.footer { margin-top: 24px; text-align: center; font-size: 0.8rem; color: var(--muted); }
+
+/* Dark map look from the stock OSM tiles */
+.map-tiles { filter: invert(1) hue-rotate(200deg) saturate(0.55) brightness(0.9) contrast(0.95); }
+
+/* ISS marker on the map */
+.iss-marker { background: none; border: none; }
+.iss-marker__dot, .iss-marker__ring { position: absolute; inset: 0; margin: auto; border-radius: 50%; }
+.iss-marker__dot { width: 14px; height: 14px; background: var(--accent); box-shadow: 0 0 18px 4px rgba(94, 234, 212, 0.7); }
+.iss-marker__ring { width: 36px; height: 36px; border: 2px solid var(--accent); animation: ring 2.4s infinite ease-out; }
+
+@keyframes pulse { 50% { box-shadow: 0 0 0 6px rgba(94, 234, 212, 0); } 0% { box-shadow: 0 0 0 0 rgba(94, 234, 212, 0.6); } }
+@keyframes ring { from { transform: scale(0.4); opacity: 1; } to { transform: scale(1.1); opacity: 0; } }
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+@media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .map-card, .map { min-height: 380px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; }
+}
