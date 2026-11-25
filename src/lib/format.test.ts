@@ -8,6 +8,9 @@ describe('formatCoordinate', () => {
         expect(formatCoordinate(-70.6, 'lon')).toBe('70.600° W');
         expect(formatCoordinate(12, 'lon')).toBe('12.000° E');
     });
+    it('uses O for west in Spanish', () => {
+        expect(formatCoordinate(-70.6, 'lon', 'es')).toBe('70.600° O');
+    });
 });
 
 describe('splitAtAntimeridian', () => {
@@ -33,5 +36,6 @@ describe('toPlace', () => {
     });
     it('copes with empty data', () => {
         expect(toPlace({}).name).toBe('Open ocean');
+        expect(toPlace({}, 'Mar abierto').name).toBe('Mar abierto');
     });
 });

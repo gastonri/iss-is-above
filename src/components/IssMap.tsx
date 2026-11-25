@@ -39,14 +39,14 @@ export default function IssMap({ position, trail }: Props) {
             <Circle
                 center={[CORDOBA.latitude, CORDOBA.longitude]}
                 radius={NEAR_RADIUS_KM * 1000}
-                pathOptions={{ color: '#a5b4fc', weight: 1, fillOpacity: 0.06, dashArray: '4 4' }}
+                pathOptions={{ className: 'zone', weight: 1, fillOpacity: 0.06, dashArray: '4 4' }}
             >
                 <Tooltip permanent direction="center" className="zone-label">
                     Córdoba
                 </Tooltip>
             </Circle>
             {splitAtAntimeridian(trail).map((segment, i) => (
-                <Polyline key={i} positions={segment} pathOptions={{ color: '#5eead4', weight: 2, opacity: 0.7, dashArray: '2 6' }} />
+                <Polyline key={i} positions={segment} pathOptions={{ className: 'trail', weight: 2, opacity: 0.8, dashArray: '2 6' }} />
             ))}
             {position && (
                 <>

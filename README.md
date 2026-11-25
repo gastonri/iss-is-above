@@ -11,7 +11,10 @@ Live tracker that shows where the International Space Station is right now, what
 - A photo and short description of the place, from Wikipedia
 - Pass log for Córdoba, Argentina: every time the ISS gets within 500 km it is recorded (start, end, closest approach, duration) in the browser's `localStorage`. Only passes that happen while the page is open are captured
 - Altitude, speed and day/night visibility
-- Responsive, dark theme, respects `prefers-reduced-motion`
+- Spanish and English (auto-detected, switchable); Wikipedia photo and text follow the chosen language
+- Dark and light themes (follows the system, switchable)
+- Short explainer of what the ISS is
+- Responsive, respects `prefers-reduced-motion`
 - No API keys needed
 
 ## Stack
@@ -43,8 +46,8 @@ Every push to `master` runs typecheck, tests and build, then publishes to GitHub
 ```
 src/
   components/   IssMap, InfoPanel
-  hooks/        useIss (polling + trail), usePlace (geocoding + photo)
-  lib/          API clients, formatting helpers, tests
+  hooks/        useIss (polling + trail), usePlace (geocoding + photo), usePassLog, useTheme
+  lib/          API clients, i18n dictionaries, formatting helpers, tests
 ```
 
 ## History

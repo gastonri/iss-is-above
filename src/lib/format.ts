@@ -1,21 +1,13 @@
-export function formatCoordinate(value: number, axis: 'lat' | 'lon'): string {
-    const hemisphere = axis === 'lat' ? (value >= 0 ? 'N' : 'S') : value >= 0 ? 'E' : 'W';
+import { LOCALES, type Lang } from './i18n';
+
+export function formatCoordinate(value: number, axis: 'lat' | 'lon', lang: Lang = 'en'): string {
+    const west = lang === 'es' ? 'O' : 'W';
+    const hemisphere = axis === 'lat' ? (value >= 0 ? 'N' : 'S') : value >= 0 ? 'E' : west;
     return `${Math.abs(value).toFixed(3)}° ${hemisphere}`;
 }
 
-export function formatNumber(value: number, digits = 0): string {
-    return value.toLocaleString('en-US', { maximumFractionDigits: digits, minimumFractionDigits: digits });
-}
-
-export function visibilityLabel(visibility: string): string {
-    switch (visibility) {
-        case 'daylight':
-            return 'In daylight';
-        case 'visible':
-            return 'Visible from the ground';
-        default:
-            return 'In Earth’s shadow';
-    }
+export function formatNumber(value: number, digits = 0, lang: Lang = 'en'): string {
+    return value.toLocaleString(LOCALES[lang], { maximumFractionDigits: digits, minimumFractionDigits: digits });
 }
 
 /**

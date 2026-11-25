@@ -1,8 +1,9 @@
+import type { Lang } from './i18n';
 import type { IssPosition, Photo, Place } from './types';
 
 const ISS_URL = 'https://api.wheretheiss.at/v1/satellites/25544';
 const GEOCODE_URL = 'https://api.bigdatacloud.net/data/reverse-geocode-client';
-const WIKI_URL = 'https://en.wikipedia.org/api/rest_v1/page/summary';
+const wikiUrl = (lang: Lang) => `https://${lang}.wikipedia.org/api/rest_v1/page/summary`;
 
 async function getJson<T>(url: string, signal?: AbortSignal): Promise<T> {
     const response = await fetch(url, { signal });
@@ -23,12 +24,12 @@ interface GeocodeResponse {
 }
 
 /** Turns raw reverse-geocoding output into something a human can read. Exported for tests. */
-export function toPlace(data: GeocodeResponse): Place {
+export function toPlace(data: GeocodeResponse, fallbackName = 'Open ocean'): Place {
     const country = data.countryName || undefined;
     const ocean = data.localityInfo?.informative?.find((i) => /ocean|sea|gulf|bay|strait/i.test(i.name))?.name;
     const local = data.city || data.locality || undefined;
 
-    const name = local ?? ocean ?? country ?? 'Open ocean';
+    const name = local ?? ocean ?? country ?? fallbackName;
     const detail = local ? country : ocean && ocean !== name ? ocean : undefined;
     const photoQueries = [local, data.principalSubdivision, country, ocean].filter(
         (q): q is string => Boolean(q)
@@ -37,17 +38,23 @@ export function toPlace(data: GeocodeResponse): Place {
     return { name, detail, photoQueries: [...new Set(photoQueries)] };
 }
 
-export async function fetchPlace(latitude: number, longitude: number, signal?: AbortSignal): Promise<Place> {
+export async function fetchPlace(
+    latitude: number,
+    longitude: number,
+    lang: Lang,
+    fallbackName: string,
+    signal?: AbortSignal
+): Promise<Place> {
     const params = new URLSearchParams({
         latitude: String(latitude),
         longitude: String(longitude),
-        localityLanguage: 'en'
+        localityLanguage: lang
     });
     try {
-        return toPlace(await getJson<GeocodeResponse>(`${GEOCODE_URL}?${params}`, signal));
+        return toPlace(await getJson<GeocodeResponse>(`${GEOCODE_URL}?${params}`, signal), fallbackName);
     } catch (error) {
         if (signal?.aborted) throw error;
-        return { name: 'Open ocean', photoQueries: [] };
+        return { name: fallbackName, photoQueries: [] };
     }
 }
 
@@ -61,17 +68,17 @@ interface WikiSummary {
 }
 
 /** Tries each query until one has a Wikipedia article with a picture. */
-export async function fetchPhoto(queries: string[], signal?: AbortSignal): Promise<Photo | null> {
+export async function fetchPhoto(queries: string[], lang: Lang, signal?: AbortSignal): Promise<Photo | null> {
     for (const query of queries) {
         try {
-            const data = await getJson<WikiSummary>(`${WIKI_URL}/${encodeURIComponent(query)}`, signal);
+            const data = await getJson<WikiSummary>(`${wikiUrl(lang)}/${encodeURIComponent(query)}`, signal);
             const imageUrl = data.originalimage?.source ?? data.thumbnail?.source;
             if (data.type === 'standard' && imageUrl) {
                 return {
                     title: data.title,
                     extract: data.extract,
                     imageUrl: data.thumbnail?.source ?? imageUrl,
-                    pageUrl: data.content_urls?.desktop?.page ?? `https://en.wikipedia.org/wiki/${encodeURIComponent(query)}`
+                    pageUrl: data.content_urls?.desktop?.page ?? `https://${lang}.wikipedia.org/wiki/${encodeURIComponent(query)}`
                 };
             }
         } catch (error) {
