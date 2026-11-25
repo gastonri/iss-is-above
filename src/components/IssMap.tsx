@@ -1,7 +1,8 @@
 import L from 'leaflet';
 import { useEffect } from 'react';
-import { MapContainer, Marker, Polyline, TileLayer, useMap } from 'react-leaflet';
+import { Circle, MapContainer, Marker, Tooltip, Polyline, TileLayer, useMap } from 'react-leaflet';
 import { splitAtAntimeridian } from '../lib/format';
+import { CORDOBA, NEAR_RADIUS_KM } from '../lib/passes';
 import type { IssPosition } from '../lib/types';
 
 const issIcon = L.divIcon({
@@ -35,6 +36,15 @@ export default function IssMap({ position, trail }: Props) {
                 url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
                 maxZoom={10}
             />
+            <Circle
+                center={[CORDOBA.latitude, CORDOBA.longitude]}
+                radius={NEAR_RADIUS_KM * 1000}
+                pathOptions={{ color: '#a5b4fc', weight: 1, fillOpacity: 0.06, dashArray: '4 4' }}
+            >
+                <Tooltip permanent direction="center" className="zone-label">
+                    Córdoba
+                </Tooltip>
+            </Circle>
             {splitAtAntimeridian(trail).map((segment, i) => (
                 <Polyline key={i} positions={segment} pathOptions={{ color: '#5eead4', weight: 2, opacity: 0.7, dashArray: '2 6' }} />
             ))}

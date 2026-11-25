@@ -1,11 +1,14 @@
 import InfoPanel from './components/InfoPanel';
 import IssMap from './components/IssMap';
+import PassLog from './components/PassLog';
 import { useIss } from './hooks/useIss';
+import { usePassLog } from './hooks/usePassLog';
 import { usePlace } from './hooks/usePlace';
 
 export default function App() {
     const { position, trail, status } = useIss();
     const { place, photo, loadingPhoto } = usePlace(position);
+    const { passes, distance, clear } = usePassLog(position);
 
     return (
         <div className="app">
@@ -26,6 +29,8 @@ export default function App() {
                 </section>
                 <InfoPanel position={position} place={place} photo={photo} loadingPhoto={loadingPhoto} />
             </main>
+
+            <PassLog passes={passes} distance={distance} onClear={clear} />
 
             <footer className="footer">
                 Data from <a href="https://wheretheiss.at">wheretheiss.at</a>,{' '}

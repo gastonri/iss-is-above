@@ -125,6 +125,21 @@ h1 {
 
 .footer { margin-top: 24px; text-align: center; font-size: 0.8rem; color: var(--muted); }
 
+/* Pass log */
+.log { margin-top: 20px; padding: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+.log__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.log h2 { margin: 0; font-size: 1.15rem; }
+.log__hint { margin: 4px 0 0; font-size: 0.85rem; color: var(--muted); }
+.log__clear { background: none; color: var(--muted); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font: inherit; font-size: 0.8rem; }
+.log__clear:hover { color: var(--text); border-color: var(--muted); }
+.log__empty { margin: 16px 0 0; color: var(--muted); font-size: 0.9rem; }
+.log__list { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 8px; max-height: 320px; overflow: auto; }
+.log__item { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; padding: 10px 12px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; font-size: 0.9rem; }
+.log__item--live { border-color: var(--accent); }
+.log__meta { color: var(--muted); font-variant-numeric: tabular-nums; }
+.zone-label { background: none; border: none; box-shadow: none; color: #c7d2fe; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.zone-label::before { display: none; }
+
 /* Dark map look from the stock OSM tiles */
 .map-tiles { filter: invert(1) hue-rotate(200deg) saturate(0.55) brightness(0.9) contrast(0.95); }
 
